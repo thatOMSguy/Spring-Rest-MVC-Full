@@ -1,3 +1,18 @@
+How to run for MySQL integrated application.
+Go to init script in scripts folder and then
+1. set DB to Mysql
+2.set session to lcalhost>console
+3. set schema to restdb
+
+Then go to the flyway scripts in db/migrations and do the same three steps
+
+
+
+
+
+
+
+
 API Endpoint to be used : https://sfg-beer-works.github.io/brewery-api/#tag/Beer-Service
 
 @SpringBootTest loads full application context, exactly like how you start a Spring container when you run your Spring Boot application.
