@@ -81,7 +81,7 @@ class BeerControllerIntegTest {
     @Test
     void testListBeers() {
         List<BeerDTO> beerDTOList = beerController.listBeers();
-        assertThat(beerDTOList.size()).isEqualTo(3);
+        assertThat(beerDTOList.size()).isEqualTo(2413);
     }
 
 
