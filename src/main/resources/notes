@@ -1,0 +1,12 @@
+API Endpoint to be used : https://sfg-beer-works.github.io/brewery-api/#tag/Beer-Service
+
+@SpringBootTest loads full application context, exactly like how you start a Spring container when you run your Spring Boot application.
+
+@WebMvcTest loads only the web layer, which includes security, filter, interceptors, etc for handling request/response. Typically you would write tests for methods under @Controller or @RestController.
+
+@DataJpaTest loads only configuration for JPA. It uses an embedded in-memory h2 if not specified otherwise.
+
+Service layer tests should ideally not have any annotations (except for ones that aid in mocking) because this is where your business logic (independent of any configurations) sits.
+
+Regarding best practice, it's really just separation of concerns. I rarely ever used @SpringBootTest unless it's meant for some ad-hoc integration test on my local.
+Annotations like @WebMvcTest keep your tests more 'modularized' and slightly faster.
