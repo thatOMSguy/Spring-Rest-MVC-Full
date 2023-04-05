@@ -9,11 +9,12 @@ import com.springrestmvcproject.spring6restmvc.repositories.BeerRepository;
 import com.springrestmvcproject.spring6restmvc.repositories.CustomerRepository;
 import com.springrestmvcproject.spring6restmvc.services.BeerCSVService;
 import com.springrestmvcproject.spring6restmvc.services.BeerService;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
@@ -27,10 +28,9 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class BootstrapData implements CommandLineRunner {
-
     private final BeerRepository beerRepository;
     private final CustomerRepository customerRepository;
-    private final BeerCSVService beerCSVService;
+    private final BeerCSVService beerCsvService;
 
     @Transactional
     @Override
@@ -40,13 +40,11 @@ public class BootstrapData implements CommandLineRunner {
         loadCustomerData();
     }
 
-
-
     private void loadCSVDataOfBeers() throws FileNotFoundException {
         if(beerRepository.count()<10){
             File file = ResourceUtils.getFile("classpath:csvdata/beers.csv");
 
-            List<BeerCSVRecord> records =beerCSVService.convertCSV(file);
+            List<BeerCSVRecord> records =beerCsvService.convertCSV(file);
 
             records.forEach(beerCSVRecord -> {
                 BeerStyle beerStyle = switch (beerCSVRecord.getStyle()) {
@@ -61,6 +59,7 @@ public class BootstrapData implements CommandLineRunner {
                     case "English Pale Ale" -> BeerStyle.PALE_ALE;
                     default -> BeerStyle.PILSNER;
                 };
+
                 beerRepository.save(Beer.builder()
                         .beerName(StringUtils.abbreviate(beerCSVRecord.getBeer(), 50))
                         .beerStyle(beerStyle)
@@ -68,11 +67,8 @@ public class BootstrapData implements CommandLineRunner {
                         .upc(beerCSVRecord.getRow().toString())
                         .quantityOnHand(beerCSVRecord.getCount())
                         .build());
-
         });
-
         }
-
     }
 
     private void loadBeerData() {
@@ -143,6 +139,8 @@ public class BootstrapData implements CommandLineRunner {
 
             customerRepository.saveAll(Arrays.asList(customer1, customer2, customer3));
         }
+
     }
+
 
 }

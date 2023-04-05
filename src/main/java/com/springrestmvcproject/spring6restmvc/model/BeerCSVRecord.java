@@ -13,6 +13,7 @@ public class BeerCSVRecord {
 
     @CsvBindByName
     private Integer row;
+    
     @CsvBindByName(column = "column.x")
     private Integer count;
     @CsvBindByName

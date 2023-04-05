@@ -26,11 +26,12 @@ public class BeerServiceImpl implements BeerService {
                 .version(1)
                 .beerName("Galaxy Cat")
                 .beerStyle(BeerStyle.PALE_ALE)
-                .upc("123")
-                .price(new BigDecimal("12.995"))
+                .upc("12356")
+                .price(new BigDecimal("12.99"))
                 .quantityOnHand(122)
                 .createDate(LocalDateTime.now())
-                .updatedDate(LocalDateTime.now()).build();
+                .updatedDate(LocalDateTime.now())
+                .build();
 
         BeerDTO beer2 = BeerDTO.builder()
                 .id(UUID.randomUUID())
@@ -60,7 +61,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public List<BeerDTO> listBeers() {
+    public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory) {
         return new ArrayList<>(beerMap.values());
     }
 
