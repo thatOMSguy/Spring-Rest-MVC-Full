@@ -48,7 +48,8 @@ public class BeerController {
     }
 
     @PutMapping(BEER_PATH_ID)
-    public ResponseEntity updateById(@PathVariable("beerId") UUID beerId, @Validated @RequestBody BeerDTO beer) {
+    public ResponseEntity updateById(@PathVariable("beerId") UUID beerId,
+                                     @Validated @RequestBody BeerDTO beer) {
     	
         if(beerService.updateBeerById(beerId, beer).isEmpty()){
             throw new NotFoundException();
@@ -72,6 +73,8 @@ public class BeerController {
     public List<BeerDTO> listBeers(@RequestParam(required = false) String beerName,
                                    @RequestParam(required = false) BeerStyle beerStyle,
                                    @RequestParam(required = false) Boolean showInventory){
+        System.out.println("++++++++Hello Im in controller for listBeers, my list size is "+
+                beerService.listBeers(beerName, beerStyle, showInventory).size());
         return beerService.listBeers(beerName, beerStyle, showInventory);
     }
 

@@ -39,6 +39,9 @@ public class BeerServiceJPA implements BeerService {
             beerList = beerRepository.findAll();
         }
 
+        System.out.println("++++++++++++++ Im in Service JPA showInventory flag is set to :" +
+                " "+showInventory+" and quantity here is "+
+                beerList.get(0).getQuantityOnHand());
         if (showInventory != null && !showInventory) {
             beerList.forEach(beer -> beer.setQuantityOnHand(null));
         }
