@@ -29,6 +29,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+
 
 
 //@SpringBootTest removed to use mockMVC
@@ -84,6 +86,8 @@ class BeerControllerTest {
                         false, 1, 25));
 
         mockMvc.perform(get("/api/v1/beer")
+//added the http basic auth however this only works with GET not POST PUT etc
+                        .with(httpBasic("myuse11","password"))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content.size()", is(3)));
