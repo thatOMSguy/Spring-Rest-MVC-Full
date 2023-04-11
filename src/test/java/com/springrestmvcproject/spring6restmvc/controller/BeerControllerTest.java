@@ -1,6 +1,7 @@
 package com.springrestmvcproject.spring6restmvc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springrestmvcproject.spring6restmvc.config.SpringSecurityConfig;
 import com.springrestmvcproject.spring6restmvc.model.BeerDTO;
 import com.springrestmvcproject.spring6restmvc.services.BeerService;
 import com.springrestmvcproject.spring6restmvc.services.BeerServiceImpl;
@@ -11,6 +12,7 @@ import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -32,9 +34,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 
 
-
 //@SpringBootTest removed to use mockMVC
 @WebMvcTest(BeerController.class)
+@Import(SpringSecurityConfig.class)
 class BeerControllerTest {
 
 
@@ -87,7 +89,7 @@ class BeerControllerTest {
 
         mockMvc.perform(get("/api/v1/beer")
 //added the http basic auth however this only works with GET not POST PUT etc
-                        .with(httpBasic("myuse11","password"))
+                        .with(httpBasic("myuser", "password"))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content.size()", is(3)));
@@ -170,7 +172,7 @@ class BeerControllerTest {
                 beerArgumentCaptor.capture());
 
         assertThat(beer.getId()).isEqualTo(argumentCaptor.getValue());
-        System.out.println("captured value ===== > "+
+        System.out.println("captured value ===== > " +
                 beerArgumentCaptor.getValue().getBeerName());
         assertThat(beerMap.get("beerName")).isEqualTo(beerArgumentCaptor.getValue().getBeerName());
     }
@@ -188,8 +190,7 @@ class BeerControllerTest {
 
 
     @Test
-    void testCreateBeerWithNoName() throws Exception
-    {
+    void testCreateBeerWithNoName() throws Exception {
 
         BeerDTO beerDTO = BeerDTO.builder().build();
         given(beerService.saveNewBeer(any(BeerDTO.class)))
@@ -197,16 +198,15 @@ class BeerControllerTest {
                         1, 25).getContent().get(1));
 
         MvcResult mvcResult = mockMvc.perform(post(BEER_PATH)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(beerDTO)))
+                        .with(httpBasic("myuser", "password"))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(beerDTO)))
                 .andExpect(status().isBadRequest()).andReturn();
 
         System.out.println(mvcResult.getResponse().getContentAsString());
 
     }
-
-
 
 
 }
