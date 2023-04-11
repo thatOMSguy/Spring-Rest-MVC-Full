@@ -58,8 +58,8 @@ class BeerControllerTest {
     ArgumentCaptor<BeerDTO> beerArgumentCaptor;
 
 
-    private static final String USER_NAME = "myuser";
-    private static final String PASSWORD = "password";
+     static final String USER_NAME = "myuser";
+     static final String PASSWORD = "password";
 
 
     @BeforeEach
