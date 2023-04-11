@@ -58,6 +58,10 @@ class BeerControllerTest {
     ArgumentCaptor<BeerDTO> beerArgumentCaptor;
 
 
+    private static final String USER_NAME = "myuser";
+    private static final String PASSWORD = "password";
+
+
     @BeforeEach
     void setup() {
         beerServiceImpl = new BeerServiceImpl();
@@ -72,6 +76,7 @@ class BeerControllerTest {
         given(beerService.getBeerById(testBeer.getId())).willReturn(Optional.of(testBeer));
 
         mockMvc.perform(get(BEER_PATH_ID, testBeer.getId())
+                        .with(httpBasic(USER_NAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -89,7 +94,7 @@ class BeerControllerTest {
 
         mockMvc.perform(get("/api/v1/beer")
 //added the http basic auth however this only works with GET not POST PUT etc
-                        .with(httpBasic("myuser", "password"))
+                        .with(httpBasic(USER_NAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content.size()", is(3)));
@@ -112,6 +117,8 @@ class BeerControllerTest {
                         1, 25).getContent().get(1));
 
         mockMvc.perform(post(BEER_PATH)
+
+                        .with(httpBasic(USER_NAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beer)))
@@ -128,6 +135,7 @@ class BeerControllerTest {
 
         given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
         mockMvc.perform(put(BEER_PATH_ID, beer.getId())
+                        .with(httpBasic(USER_NAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beer)))
@@ -144,6 +152,7 @@ class BeerControllerTest {
 
         given(beerService.deleteBeerById(any())).willReturn(true);
         mockMvc.perform(delete(BEER_PATH_ID, beer.getId())
+                        .with(httpBasic(USER_NAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beer)))
                 .andExpect(status().isNoContent());
@@ -162,6 +171,7 @@ class BeerControllerTest {
         beerMap.put("beerName", "New Name");
 
         mockMvc.perform(patch(BEER_PATH_ID, beer.getId())
+                        .with(httpBasic(USER_NAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerMap)))
@@ -198,7 +208,7 @@ class BeerControllerTest {
                         1, 25).getContent().get(1));
 
         MvcResult mvcResult = mockMvc.perform(post(BEER_PATH)
-                        .with(httpBasic("myuser", "password"))
+                        .with(httpBasic(USER_NAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerDTO)))
